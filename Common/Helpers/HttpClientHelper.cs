@@ -46,10 +46,15 @@ namespace RecurringIntegrationsScheduler.Common.Helpers
             //Use Tls1.2 as default transport layer
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            var httpClientHandler = new HttpClientHandler {
+            IWebProxy webProxy = WebRequest.DefaultWebProxy;
+            webProxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+
+            var httpClientHandler = new HttpClientHandler
+            {
                 AllowAutoRedirect = false,
                 UseCookies = false,
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                Proxy = webProxy
             };
 
             _httpClient = new HttpClient(new HttpRetryHandler(httpClientHandler, _settings))

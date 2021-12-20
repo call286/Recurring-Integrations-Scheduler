@@ -91,6 +91,12 @@ namespace RecurringIntegrationsScheduler.Job
                 }
                 await Process();
 
+                if (_settings.OneShot)
+                {
+                    await context.Scheduler.PauseJob(context.JobDetail.Key);
+                    Log.InfoFormat(CultureInfo.InvariantCulture, string.Format(Resources.Job_0_was_paused_indefinitely, _context.JobDetail.Key));
+                }
+
                 if (_settings.LogVerbose || Log.IsDebugEnabled)
                 {
                     Log.DebugFormat(CultureInfo.InvariantCulture, string.Format(Resources.Job_0_ended, _context.JobDetail.Key));
@@ -199,7 +205,7 @@ namespace RecurringIntegrationsScheduler.Job
                     }
                     using Stream downloadedStream = await response.Content.ReadAsStreamAsync();
 
-                    var fileName = $"{DateTime.Now:yyyy-MM-dd_HH-mm-ss-ffff}.zip";
+                    var fileName = $"{DateTime.Now:yyyy-MM-dd_HH-mm-ss-ffff}-{_settings.Company}.zip";
                     var dataMessage = new DataMessage()
                     {
                         FullPath = Path.Combine(_settings.DownloadSuccessDir, fileName),

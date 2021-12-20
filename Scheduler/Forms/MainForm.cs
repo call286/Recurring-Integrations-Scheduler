@@ -270,6 +270,7 @@ namespace RecurringIntegrationsScheduler.Forms
                 if (Scheduler.Instance.GetScheduler() != null)
                 {
                     Scheduler.Instance.GetScheduler().Start().Wait();
+                    PauseAllJobsToolStripMenuItem_Click(this, new EventArgs());
                     toolStripConnectionStatus.Text = Resources.Connected_to_standalone_scheduler;
                     connectToServerButton.Enabled = false;
                     privateSchedulerButton.Enabled = false;
@@ -945,6 +946,27 @@ namespace RecurringIntegrationsScheduler.Forms
                     }
                 }
             }
+            if (e.KeyCode == Keys.R && e.Shift)
+            {
+                e.SuppressKeyPress = true;
+                DataGridViewCell currentCell = (sender as DataGridView).CurrentCell;
+                if (currentCell != null)
+                {
+                    var selectedRow = jobsDataGridView.Rows[jobsDataGridView.SelectedCells[0].RowIndex];
+                    int nRow = jobsDataGridView.SelectedCells[0].RowIndex;
+                    var status = selectedRow.Cells["Status"].Value.ToString();
+                    if (status.Equals("Paused"))
+                    {
+                        ResumeJobToolStripMenuItem_Click(this, new EventArgs());
+                        jobsDataGridView.Rows[nRow].Selected = true;//Because ResumeJobToolStripMenuItem_Click makes a refresh, selecting first row/no row
+                    }
+                    if (nRow >= 0 && nRow < jobsDataGridView.RowCount - 1)
+                    {
+                        jobsDataGridView.Rows[nRow].Selected = false;
+                        jobsDataGridView.Rows[++nRow].Selected = true;
+                    }
+                }
+            }
         }
 
         private void JobsDataGridView_CellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
@@ -1026,6 +1048,70 @@ namespace RecurringIntegrationsScheduler.Forms
                     return;
                 }
                 scheduler.TriggerJob(jobKey);
+                RefreshGrid();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Resources.Unexpected_error);
+            }
+        }
+
+        private void CloneJobMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var jobName = jobsDataGridView.SelectedRows[0].Cells["JobName"].Value.ToString();
+                var jobGroup = jobsDataGridView.SelectedRows[0].Cells["JobGroup"].Value.ToString();
+                var jobKey = new JobKey(jobName, jobGroup);
+                var jobNameClone = jobName + "_COPY";
+                var jobKeyClone = new JobKey(jobNameClone, jobGroup);
+
+                var scheduler = Scheduler.Instance.GetScheduler();
+                if (scheduler == null)
+                {
+                    MessageBox.Show(Resources.No_active_scheduler, Resources.Missing_scheduler);
+                    return;
+                }
+
+                var jobDetail = scheduler.GetJobDetail(jobKey).Result;
+                var jobTrigger = scheduler.GetTriggersOfJob(jobKey).Result.First();
+
+                if (jobDetail.JobType.FullName != SettingsConstants.ExportJob)
+                {
+                    MessageBox.Show(Resources.Validation_error, Resources.Job_configuration_is_not_valid);
+                    return;
+                }
+
+                using CloneJob cloneJobForm = new CloneJob
+                {
+                    JobDetail = jobDetail,
+                    Trigger = jobTrigger
+                };
+
+                cloneJobForm.ShowDialog();
+
+                if (cloneJobForm.Cancelled && cloneJobForm.JobDetailNew == null && cloneJobForm.TriggerNew == null) return;
+                IJobDetail exportJob;
+                ITrigger exportTrigger;
+
+                var dataMap = jobDetail.JobDataMap;
+                dataMap[SettingsConstants.Company] = cloneJobForm.textBoxCompany.Text;
+                var jobCloneBuilder = jobDetail.GetJobBuilder().WithIdentity(cloneJobForm.textBoxNewName.Text, jobDetail.Key.Group).WithDescription(String.Empty);
+                jobCloneBuilder.SetJobData(dataMap);
+                exportJob = jobCloneBuilder.Build();
+                exportTrigger = jobTrigger
+                                    .GetTriggerBuilder()
+                                    .ForJob(exportJob)
+                                    .WithDescription(string.Format(Resources.Trigger_for_job_0_1, exportJob.Key.Name, exportJob.Key.Group))
+                                    .WithIdentity(new TriggerKey(string.Format(Resources.Trigger_for_job_0_1, exportJob.Key.Name, exportJob.Key.Group), exportJob.Key.Group))
+                                    .Build();
+
+                //var jobDetailCloneBuilder = jobDetail.GetJobBuilder().WithIdentity(jobKeyClone); //TODO - Vielleicht besser so?
+
+                scheduler.ScheduleJob(exportJob, new HashSet<ITrigger> { exportTrigger }, true);
+
+                _scheduleChanged = true;
+
                 RefreshGrid();
             }
             catch (Exception ex)

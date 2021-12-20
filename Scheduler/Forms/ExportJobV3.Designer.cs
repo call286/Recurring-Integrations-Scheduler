@@ -119,6 +119,7 @@ namespace RecurringIntegrationsScheduler.Forms
             this.mainToolStrip = new System.Windows.Forms.ToolStrip();
             this.cancelToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.addToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.oneShotCheckBox = new System.Windows.Forms.CheckBox();
             this.retryPolicyGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.retriesCountUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.retriesDelayUpDown)).BeginInit();
@@ -1195,6 +1196,17 @@ namespace RecurringIntegrationsScheduler.Forms
             this.addToolStripButton.Text = "Add job";
             this.addToolStripButton.Click += new System.EventHandler(this.AddToolStripButton_Click);
             // 
+            // oneShotCheckBox
+            // 
+            this.oneShotCheckBox.AutoSize = true;
+            this.oneShotCheckBox.Location = new System.Drawing.Point(87, 80);
+            this.oneShotCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.oneShotCheckBox.Name = "oneShotCheckBox";
+            this.oneShotCheckBox.Size = new System.Drawing.Size(71, 17);
+            this.oneShotCheckBox.TabIndex = 32;
+            this.oneShotCheckBox.Text = "One Shot";
+            this.oneShotCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ExportJobV3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -1350,5 +1362,6 @@ namespace RecurringIntegrationsScheduler.Forms
         private System.Windows.Forms.Label andOrLabel;
         private System.Windows.Forms.GroupBox groupBoxLogging;
         private System.Windows.Forms.CheckBox verboseLoggingCheckBox;
+        private System.Windows.Forms.CheckBox oneShotCheckBox;
     }
 }

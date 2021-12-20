@@ -83,30 +83,32 @@ namespace RecurringIntegrationsScheduler.Common.JobSettings
             }
 
             DelayBetweenStatusCheck = dataMap.GetInt(SettingsConstants.DelayBetweenStatusCheck);
-        }
 
-        #region Members
-
-        /// <summary>
-        /// Gets the download success dir.
-        /// </summary>
-        /// <value>
-        /// The download success dir.
-        /// </value>
-        public string DownloadSuccessDir { get; private set; }
-
-        /// <summary>
-        /// Gets the download errors dir.
-        /// </summary>
-        /// <value>
-        /// The download errors dir.
-        /// </value>
-        public string DownloadErrorsDir { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether [unzip package].
-        /// </summary>
-        /// <value>
+            OneShot = dataMap.GetBooleanValue(SettingsConstants.OneShot);
+        } 
+         
+        #region M embers
+         
+        /// <summ ary>
+        /// Gets t he download success dir.
+        /// </summa ry>
+        /// <value> 
+        /// The down load success dir.
+        /// </value> 
+        public string  DownloadSuccessDir { get; private set; }
+         
+        /// <summ ary>
+        /// Gets t he download errors dir.
+        /// </summa ry>
+        /// <value> 
+        /// The down load errors dir.
+        /// </value> 
+        public string  DownloadErrorsDir { get; private set; }
+         
+        /// <summ ary>
+        /// Gets a  value indicating whether [unzip package].
+        /// </summa ry>
+        /// <value> 
         ///   <c>true</c> if [unzip package]; otherwise, <c>false</c>.
         /// </value>
         public bool UnzipPackage { get; private set; }
@@ -150,6 +152,12 @@ namespace RecurringIntegrationsScheduler.Common.JobSettings
         /// Delay between status checks.
         /// </value>
         public int DelayBetweenStatusCheck { get; private set; }
+
+        /// <summary>
+        /// Gets or sets OneShot behavior.
+        /// One shot means one Execution, then pause.
+        /// </summary>
+        public bool OneShot { get; private set; }
 
         #endregion
     }

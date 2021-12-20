@@ -81,6 +81,7 @@ namespace RecurringIntegrationsScheduler.Forms
             this.refreshButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.runJobNowButton = new System.Windows.Forms.ToolStripButton();
+            this.cloneJobMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.jobsDataGridView)).BeginInit();
@@ -274,6 +275,7 @@ namespace RecurringIntegrationsScheduler.Forms
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editJobMenuItem,
+            this.cloneJobMenuItem,
             this.pauseJobMenuItem,
             this.resumeJobToolStripMenuItem1,
             this.runJobNowToolStripMenuItem,
@@ -542,6 +544,13 @@ namespace RecurringIntegrationsScheduler.Forms
             this.runJobNowButton.ToolTipText = "Run job now!";
             this.runJobNowButton.Click += new System.EventHandler(this.RunJobNowToolStripMenuItem_Click);
             // 
+            // cloneJobMenuItem
+            // 
+            this.cloneJobMenuItem.Name = "cloneJobMenuItem";
+            this.cloneJobMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.cloneJobMenuItem.Text = "Clone Job";
+            this.cloneJobMenuItem.Click += new System.EventHandler(this.CloneJobMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -619,5 +628,6 @@ namespace RecurringIntegrationsScheduler.Forms
         private System.Windows.Forms.ToolStripMenuItem addExportJobMenuItem;
         private System.Windows.Forms.ToolStripMenuItem runJobNowToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton runJobNowButton;
+        private System.Windows.Forms.ToolStripMenuItem cloneJobMenuItem;
     }
 }

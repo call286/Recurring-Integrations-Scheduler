@@ -347,5 +347,10 @@ namespace RecurringIntegrationsScheduler.Common.Contracts
         /// Job key
         /// </summary>
         public const string JobKey = "JobKey";
+
+        /// <summary>
+        /// Job is a OneShot
+        /// </summary>
+        public static string OneShot = "JobIsOneShot";
     }
 }
